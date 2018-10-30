@@ -2,10 +2,9 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Downshift from 'downshift';
-import isEqual from 'lodash.isequal';
 import ListBox from '../ListBox';
-import Checkbox from '../Checkbox';
 import Selection from '../../internal/Selection';
+import getNestedItems from './tools/nestedItems';
 import { sortingPropTypes } from './MultiSelectPropTypes';
 import { defaultItemToString } from './tools/itemToString';
 import { defaultSortItems, defaultCompareItems } from './tools/sorting';
@@ -80,6 +79,7 @@ export default class FilterableMultiSelect extends React.Component {
       highlightedIndex: null,
       isOpen: false,
       inputValue: '',
+      expandedIds: [],
     };
   }
 
@@ -161,8 +161,23 @@ export default class FilterableMultiSelect extends React.Component {
     this.inputNode && this.inputNode.focus && this.inputNode.focus();
   };
 
+  toggleExpandedItem = id => event => {
+    event.stopPropagation();
+
+    const expandedIndex = this.state.expandedIds.indexOf(id);
+    const expandedIds = [...this.state.expandedIds];
+
+    if (expandedIndex >= 0) {
+      expandedIds.splice(expandedIndex, 1);
+    } else {
+      expandedIds.push(id);
+    }
+
+    this.setState({ expandedIds: expandedIds });
+  };
+
   render() {
-    const { highlightedIndex, isOpen, inputValue } = this.state;
+    const { highlightedIndex, isOpen, inputValue, expandedIds } = this.state;
     const {
       className: containerClassName,
       disabled,
@@ -199,8 +214,8 @@ export default class FilterableMultiSelect extends React.Component {
             itemToString={itemToString}
             onStateChange={this.handleOnStateChange}
             onOuterClick={this.handleOnOuterClick}
-            selectedItem={selectedItems}
-            render={({
+            selectedItem={selectedItems}>
+            {({
               getButtonProps,
               getInputProps,
               getItemProps,
@@ -239,43 +254,27 @@ export default class FilterableMultiSelect extends React.Component {
                   <ListBox.MenuIcon isOpen={isOpen} />
                 </ListBox.Field>
                 {isOpen && (
-                  <ListBox.Menu>
-                    {sortItems(
-                      filterItems(items, { itemToString, inputValue }),
-                      {
-                        selectedItems,
-                        itemToString,
-                        compareItems,
-                        locale,
-                      }
-                    ).map((item, index) => {
-                      const itemProps = getItemProps({ item });
-                      const itemText = itemToString(item);
-                      const isChecked =
-                        selectedItem.filter(selected => isEqual(selected, item))
-                          .length > 0;
-                      return (
-                        <ListBox.MenuItem
-                          key={itemProps.id}
-                          isActive={isChecked}
-                          isHighlighted={highlightedIndex === index}
-                          {...itemProps}>
-                          <Checkbox
-                            id={itemProps.id}
-                            name={itemText}
-                            checked={isChecked}
-                            readOnly={true}
-                            tabIndex="-1"
-                            labelText={itemText}
-                          />
-                        </ListBox.MenuItem>
-                      );
+                  <ul>
+                    {getNestedItems({
+                      items,
+                      sortItems,
+                      filterItems,
+                      getItemProps,
+                      itemToString,
+                      highlightedIndex,
+                      selectedItem,
+                      selectedItems,
+                      compareItems,
+                      locale,
+                      expandedIds,
+                      toggleExpandedItem: this.toggleExpandedItem,
+                      path: '',
                     })}
-                  </ListBox.Menu>
+                  </ul>
                 )}
               </ListBox>
             )}
-          />
+          </Downshift>
         )}
       />
     );

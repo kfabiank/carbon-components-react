@@ -7,12 +7,70 @@ import MultiSelect from '../MultiSelect';
 
 const items = [
   {
-    id: 'item-1',
-    text: 'Item 1',
+    text: 'Category 1',
+    options: [
+      {
+        id: 'cat-1-item-1',
+        text: 'Cat 1 Item 1',
+        options: [
+          {
+            id: 'cat-1-item-1-opt-1',
+            text: 'Cat 1 Item 1 Option 1',
+          },
+          {
+            id: 'cat-1-item-1-opt-2',
+            text: 'Cat 1 Item 1 Option 2',
+          },
+        ],
+      },
+      {
+        id: 'cat-1-item-2',
+        text: 'Cat 1 Item 2',
+        options: [
+          {
+            id: 'cat-1-item-2-opt-1',
+            text: 'Cat 1 Item 2 Option 1',
+          },
+          {
+            id: 'cat-1-item-2-opt-2',
+            text: 'Cat 1 Item 2 Option 2',
+          },
+        ],
+      },
+    ],
   },
   {
-    id: 'item-2',
-    text: 'Item 2',
+    text: 'Category 2',
+    options: [
+      {
+        id: 'cat-2-item-1',
+        text: 'Cat 2 Item 1',
+        options: [
+          {
+            id: 'cat-2-item-1-opt-1',
+            text: 'Cat 2 Item 1 Option 1',
+          },
+          {
+            id: 'cat-2-item-1-opt-2',
+            text: 'Cat 2 Item 1 Option 2',
+          },
+        ],
+      },
+      {
+        id: 'cat-2-item-2',
+        text: 'Cat 2 Item 2',
+        options: [
+          {
+            id: 'cat-2-item-2-opt-1',
+            text: 'Cat 2 Item 2 Option 1',
+          },
+          {
+            id: 'cat-2-item-2-opt-2',
+            text: 'Cat 2 Item 2 Option 2',
+          },
+        ],
+      },
+    ],
   },
 ];
 
